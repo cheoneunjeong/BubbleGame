@@ -1,8 +1,13 @@
-package bubble.test.ex03;
+package bubble.test.ex04;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class Player extends JLabel implements Moveable {
 	
 	//위치상태
@@ -46,18 +51,42 @@ public class Player extends JLabel implements Moveable {
 	@Override
 	public void left() {
 		// TODO Auto-generated method stub
-		setIcon(playerL);
-		x = x-10;
-		setLocation(x, y);
+		System.out.println("left");
+		left = true;
+		new Thread(()-> {
+			while(left) {
+				setIcon(playerL);
+				x = x-1;
+				setLocation(x, y);		
+				try {
+					Thread.sleep(10);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}).start();
+
 	}
 
 	@Override
 	public void right() {
 		// TODO Auto-generated method stub
-		
-		setIcon(playerR);
-		x = x+10;
-		setLocation(x, y);
+		System.out.println("right");
+		right=true;
+		new Thread(()-> {
+			while(right) {
+				setIcon(playerR);
+				x = x+1;
+				setLocation(x, y);
+				try {
+					Thread.sleep(10);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}				
+			}
+		}).start();
 	}
 
 	@Override
