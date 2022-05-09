@@ -1,4 +1,4 @@
-package bubble.test.ex12;
+package bubble.test.ex14;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -11,6 +11,7 @@ import lombok.Setter;
 public class Bubble extends JLabel implements Moveable {
 	
 	//의존성 콤포지션
+	private BubbleFrame mContext;
 	private Player player;
 	private BackgroundBubbleService backgroundBubbleService;
 	
@@ -31,22 +32,23 @@ public class Bubble extends JLabel implements Moveable {
  	private ImageIcon bomb; //물방울이 터진 상태
  
  
- 	public Bubble(Player player) {
- 		this.player = player;
+ 	public Bubble(BubbleFrame mContext) {
+ 		this.mContext = mContext;
+ 		this.player = mContext.getPlayer();
  		initObject();
  		initSetting();
- 		initThread();
+// 		initThread();
  	}
 
-	private void initThread() {
-		new Thread(()-> {
-			if(player.getPd() == PlayerDirection.LEFT) {
-				left();
-			}else {
-				right();
-			}
-		}).start();
-	}
+//	private void initThread() {
+//		new Thread(()-> {
+//			if(player.getPd() == PlayerDirection.LEFT) {
+//				left();
+//			}else {
+//				right();
+//			}
+//		}).start();
+//	}
 	
 	private void initObject() {
 		bubble = new ImageIcon("image/bubble.png");
@@ -79,6 +81,7 @@ public class Bubble extends JLabel implements Moveable {
 			setLocation(x,y);
 			
 			if(backgroundBubbleService.leftWall()) {
+				left = false;
 				break;
 			}
 
@@ -100,6 +103,7 @@ public class Bubble extends JLabel implements Moveable {
 			setLocation(x,y);
 			
 			if(backgroundBubbleService.righttWall()) {
+				right = false;
 				break;
 			}
 
@@ -117,22 +121,34 @@ public class Bubble extends JLabel implements Moveable {
 	public void up() {
 		up = true;
 		while(up) {
-			for(int i=0; i<400; i++) {
-				y--;
-				setLocation(x,y);
-				
-				if(backgroundBubbleService.topWall()) {
-					break;
-				}
-
-				try {
-					Thread.sleep(1);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+			y--;
+			setLocation(x,y);
+			
+			if(backgroundBubbleService.topWall()) {
+				up = false;
+				break;
 			}
-			up();
+
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		clearBubble(); //천장에 버블이 도착하고 3초후에 메모리에서 소멸
+	}
+
+	private void clearBubble() {
+		try {
+			Thread.sleep(3000);
+			setIcon(bomb);
+			Thread.sleep(3000);
+			mContext.remove(this); //BubbleFrame의 bubble이 메모리에서 소멸
+			mContext.repaint(); //BubbleFrame의 전체를 다시 그린다.(메모리에 있는것만!)
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 }
