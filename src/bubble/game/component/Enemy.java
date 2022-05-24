@@ -35,6 +35,8 @@ public class Enemy extends JLabel implements Moveable {
 	
 	private int state; //0(살아있는 상태), 1(갇힌 상태)
 	
+	private boolean bottom;
+	
 	
 	private ImageIcon enemyR, enemyL;
 
@@ -65,6 +67,8 @@ public class Enemy extends JLabel implements Moveable {
 		down = false;
 	
 		state = 0;
+		
+		bottom = false;
 		
 		ed = EnemyDirection.RIGHT;
 		setIcon(enemyR);

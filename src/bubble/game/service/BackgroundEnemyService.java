@@ -19,7 +19,7 @@ public class BackgroundEnemyService implements Runnable {
 	public BackgroundEnemyService(Enemy enemy) {
 		this.enemy = enemy;
 		try {
-			image = ImageIO.read(new File("image/backgroundMapService.png"));
+			image = ImageIO.read(new File("image/backgroundMapService2.png"));
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 		}
@@ -34,7 +34,6 @@ public class BackgroundEnemyService implements Runnable {
 			Color rightColor = new Color(image.getRGB(enemy.getX()+50+15, enemy.getY()+25));
 			int bottomColor = image.getRGB(enemy.getX()+20, enemy.getY()+50 +5) + 
 							image.getRGB(enemy.getX()+50-20, enemy.getY()+50 +5);
-			//System.out.println("바텀컬러"+ bottomColor);
 		
 			//바닥 충돌 확인
 			if(bottomColor != -2) {
@@ -53,12 +52,26 @@ public class BackgroundEnemyService implements Runnable {
 				if(!enemy.isRight()) {
 					enemy.right();
 				}
+				if(enemy.isBottom() && !enemy.isUp()) {
+					enemy.up();
+				}
 			} else if(rightColor.getRed() == 255 && rightColor.getGreen()==0 && rightColor.getBlue() == 0) {
+				System.out.println("바닥"+ bottomColor);
 				enemy.setRight(false);
 				//System.out.println("오른쪽 충돌");
 				if(!enemy.isLeft()) {
 					enemy.left();
 				}
+				if(bottomColor == -131072 && !enemy.isUp()) {
+					enemy.setBottom(true);
+					enemy.up();
+				} else {
+					enemy.setBottom(false);
+				}
+			}
+			
+			if(enemy.isBottom() && !enemy.isUp() && bottomColor == -33423872) {
+				enemy.up();
 			}
 			
 			try {
