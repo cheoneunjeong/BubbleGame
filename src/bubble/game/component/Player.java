@@ -19,6 +19,7 @@ public class Player extends JLabel implements Moveable {
 	
 	private BubbleFrame mContext;
 	private List<Bubble> bubbleList;
+	private List<Enemy> enemyList;
 	
 	//위치상태
 	private int x;
@@ -46,13 +47,14 @@ public class Player extends JLabel implements Moveable {
 
 	public Player(BubbleFrame mContext) {
 		this.mContext = mContext;
+		this.enemyList = mContext.getEnemyList();
 		initObject();
 		initSetting();
 		initBackgroundPlayerService();
 	}
 
 	private void initBackgroundPlayerService() {
-		new Thread(new BackgroundPlayerService(this)).start();
+		new Thread(new BackgroundPlayerService(this, mContext)).start();
 	}
 
 	private void initObject() {

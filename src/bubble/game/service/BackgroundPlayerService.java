@@ -8,20 +8,28 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
+import bubble.game.BubbleFrame;
 import bubble.game.component.Bubble;
+import bubble.game.component.Enemy;
+import bubble.game.component.GameOver;
 import bubble.game.component.Player;
 
 //백그라운드에서 관찰
 public class BackgroundPlayerService implements Runnable {
 	
+	private BubbleFrame mContext;
+	
 	private BufferedImage image;
 	private Player player;
 	private List<Bubble> bubbleList;
+	private List<Enemy> enemyList;
 	
 	//플레이어, 버블
-	public BackgroundPlayerService(Player player) {
+	public BackgroundPlayerService(Player player, BubbleFrame mContext) {
+		this.mContext = mContext;
 		this.player = player;
 		this.bubbleList= player.getBubbleList();
+		this.enemyList= player.getEnemyList();
 		try {
 			image = ImageIO.read(new File("image/backgroundMapService.png"));
 		} catch (IOException e) {
@@ -46,6 +54,23 @@ public class BackgroundPlayerService implements Runnable {
 				}
 			}
 			
+			//적군충돌체크
+			for(int i=0; i<enemyList.size(); i++) {
+				Enemy enemy = enemyList.get(i);
+				if(enemy.getState() ==0  ) {
+					if((Math.abs(player.getX()-enemy.getX()) < 10) &&
+					Math.abs(player.getY()-enemy.getY()) > 0 && Math.abs(player.getY()-enemy.getY()) < 50 ){
+						System.out.println("적군 충돌");
+						
+						mContext.remove(player);
+						mContext.repaint();
+						mContext.gameOver();
+						mContext.refresh();
+					
+						break; 
+					}
+				}
+			}
 			
 			//2.벽 충돌체크
 			//색상확인

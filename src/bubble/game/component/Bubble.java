@@ -1,5 +1,7 @@
 package bubble.game.component;
 
+import java.util.List;
+
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
@@ -16,7 +18,7 @@ public class Bubble extends JLabel implements Moveable {
 	//의존성 콤포지션
 	private BubbleFrame mContext;
 	private Player player;
-	private Enemy enemy;
+	private List<Enemy> enemy;
 	private BackgroundBubbleService backgroundBubbleService;
 	
 	//위치상태
@@ -39,7 +41,7 @@ public class Bubble extends JLabel implements Moveable {
  	public Bubble(BubbleFrame mContext) {
  		this.mContext = mContext;
  		this.player = mContext.getPlayer();
- 		this.enemy   = mContext.getEnemy();
+ 		this.enemy   = mContext.getEnemyList();
  		initObject();
  		initSetting();
 // 		initThread();
@@ -90,14 +92,20 @@ public class Bubble extends JLabel implements Moveable {
 				break;
 			}
 			
-			if((Math.abs(x - enemy.getX()) < 10) && 
-					Math.abs(y - enemy.getY()) > 0 && Math.abs(y - enemy.getY()) < 50 ) {
-				 if(enemy.getState()==0) {
-					 attack();
-					 break;
-				 }
+			
+			for(Enemy e : enemy) {
+				if((Math.abs(x - e.getX()) < 10) && 
+						Math.abs(y - e.getY()) > 0 && Math.abs(y - e.getY()) < 50 ) {
+					if(e.getState()==0) {
+						attack(e);
+						break;
+					}
+				}				
 			}
+			
+			if(state == 1) break;
 
+			
 			try {
 				Thread.sleep(1);
 			} catch (InterruptedException e) {
@@ -120,14 +128,18 @@ public class Bubble extends JLabel implements Moveable {
 				break;
 			}
 			
-			if((Math.abs(x - enemy.getX()) < 10) && 
-					Math.abs(y - enemy.getY()) > 0 && Math.abs(y - enemy.getY()) < 50 ) {
-				 if(enemy.getState()==0) {
-					 attack();
-					 break;
-				 }
+			for(Enemy e : enemy) {
+				if((Math.abs(x - e.getX()) < 10) && 
+						Math.abs(y - e.getY()) > 0 && Math.abs(y - e.getY()) < 50 ) {
+					if(e.getState()==0) {
+						attack(e);
+						break;
+					}
+					
+				}
 			}
 
+			if(state == 1) break;
 
 			try {
 				Thread.sleep(1);
@@ -174,11 +186,11 @@ public class Bubble extends JLabel implements Moveable {
 	}
 	
 	@Override
-	public void attack() {
+	public void attack(Enemy e) {
 		state = 1;
-		enemy.setState(1);
+		e.setState(1);
 		setIcon(bubbled);
-		mContext.remove(enemy); //메모리에서 사라지게한다.
+		mContext.remove(e); //메모리에서 사라지게한다.
 		mContext.repaint();
 		
 	}

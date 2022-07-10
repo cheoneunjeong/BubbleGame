@@ -56,7 +56,6 @@ public class BackgroundEnemyService implements Runnable {
 					enemy.up();
 				}
 			} else if(rightColor.getRed() == 255 && rightColor.getGreen()==0 && rightColor.getBlue() == 0) {
-				System.out.println("바닥"+ bottomColor);
 				enemy.setRight(false);
 				//System.out.println("오른쪽 충돌");
 				if(!enemy.isLeft()) {
@@ -64,6 +63,7 @@ public class BackgroundEnemyService implements Runnable {
 				}
 				if(bottomColor == -131072 && !enemy.isUp()) {
 					enemy.setBottom(true);
+					
 					enemy.up();
 				} else {
 					enemy.setBottom(false);

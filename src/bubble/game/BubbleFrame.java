@@ -3,12 +3,15 @@ package bubble.game;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 import bubble.game.component.Enemy;
+import bubble.game.component.GameOver;
 import bubble.game.component.Player;
 import bubble.game.music.BGM;
 import lombok.Getter;
@@ -22,7 +25,11 @@ public class BubbleFrame extends JFrame {
 	
 	private JLabel backgroundMap;
 	private Player player;
-	private Enemy enemy;
+	private List<Enemy> enemyList;
+	private String direction;
+	private GameOver gameOver;
+	
+	private BGM bgm;
 
 	public BubbleFrame() {
 		initObject();
@@ -88,13 +95,25 @@ public class BubbleFrame extends JFrame {
 		backgroundMap = new JLabel(new ImageIcon("image/backgroundMap.png"));
 		setContentPane(backgroundMap);
 		
+		mContext.setDirection("left");
+		Enemy enemy = new Enemy(mContext);
+		enemy.setX(280);
+		
+		mContext.setDirection("right");
+		Enemy enemy2 = new Enemy(mContext);
+		
+		enemyList = new ArrayList<Enemy>();
+		enemyList.add(enemy);
+		enemyList.add(enemy2);
+		
+		for(Enemy e : enemyList) {			
+			add(e);
+		}
+		
 		player = new Player(mContext);
 		add(player);
-		
-		enemy = new Enemy(mContext);
-		add(enemy);
-		
-		new BGM();
+
+		bgm = new BGM();
 		
 		//backgroundMap.setLocation(300, 300);
 		//backgroundMap.setSize(1000, 600);
@@ -108,6 +127,17 @@ public class BubbleFrame extends JFrame {
 		setLocationRelativeTo(null); //jframe을 가운데로
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //창을 끌때 jvm도 같이 종료
 	}
+	
+	public void gameOver() {
+		gameOver = new GameOver();
+		mContext.add(gameOver);
+		bgm.gameOverBGM();
+    }
+    
+    public void refresh() {
+        validate();
+        repaint();
+    }
 	
 	
 	public static void main(String[] args) {

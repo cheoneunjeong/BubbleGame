@@ -1,5 +1,7 @@
 package bubble.game.component;
 
+import java.util.List;
+
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
@@ -45,7 +47,12 @@ public class Enemy extends JLabel implements Moveable {
 		initObject();
 		initSetting();
 		initBackgroundEnemyService();
-		right();
+		
+		if(mContext.getDirection() == "left") {
+			left();
+		}else {
+			right();			
+		}
 	}
 
 	private void initBackgroundEnemyService() {
@@ -70,7 +77,11 @@ public class Enemy extends JLabel implements Moveable {
 		
 		bottom = false;
 		
-		ed = EnemyDirection.RIGHT;
+		if(mContext.getDirection() == "left") {
+			ed = EnemyDirection.LEFT;
+		}else {
+			ed = EnemyDirection.RIGHT;			
+		}
 		setIcon(enemyR);
 		setSize(50, 50);
 		setLocation(x, y);
